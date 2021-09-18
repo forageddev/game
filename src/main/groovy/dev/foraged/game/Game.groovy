@@ -20,6 +20,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
+import java.text.SimpleDateFormat
 import java.util.stream.Collectors
 
 abstract class Game<P extends GamePlayer, A extends Arena> {
@@ -88,7 +89,7 @@ abstract class Game<P extends GamePlayer, A extends Arena> {
     void stop() {
         new GameStopEvent(this).callEvent()
         List<P> rankings = players.values().stream().sorted(Comparator.naturalOrder()).limit(3).collect(Collectors.toList())
-        buildWrapper(rankings.stream().map(s -> "&e&l${rankings.indexOf(s) + 1} Place: &7${Bukkit.getOfflinePlayer(s.id).name}").collect(Collectors.joining("\n", "", ""))).each {broadcast(it)}
+        buildWrapper(rankings.stream().map(s -> CC.center("&e&l${CC.placement(rankings.indexOf(s))} Place: &7${Bukkit.getOfflinePlayer(s.id).name}")).collect(Collectors.joining("\n", "", ""))).each {broadcast(it)}
     }
 
     void join(Player player) {
@@ -99,14 +100,6 @@ abstract class Game<P extends GamePlayer, A extends Arena> {
         broadcast("&7${player.name} &ehas joined (&b${players.size() + 1}&e/&b${Bukkit.maxPlayers}&e)!")
 
         buildWrapper(description.split("\n").toList().stream().map(it -> CC.center("&e&l${it}")).collect(Collectors.joining("\n", "", ""))).each {player.sendMessage(CC.translate(it))}
-
-        /*player.sendMessage(CC.translate(StringUtils.repeat("&a▬", 80)))
-        player.sendMessage(CC.center("&f&l${name}"))
-        player.sendMessage("")
-        description.split("\n").each {
-            player.sendMessage(CC.center("&e&l${it}"))
-        }
-        player.sendMessage(CC.translate(StringUtils.repeat("&a▬", 80)))*/
     }
 
     void leave(Player player) {
@@ -122,11 +115,11 @@ abstract class Game<P extends GamePlayer, A extends Arena> {
 
     String[] buildWrapper(String title, String message) {
         Arrays.asList(
-                CC.translate(StringUtils.repeat("&a▬", 80)),
+                CC.translate(StringUtils.repeat("&b▬", 80)),
                 CC.center("&f&l${title}"),
                 "",
                 message,
-                CC.translate(StringUtils.repeat("&a▬", 80)))
+                CC.translate(StringUtils.repeat("&b▬", 80)))
     }
 
     String[] buildWrapper(String message) {
@@ -136,4 +129,7 @@ abstract class Game<P extends GamePlayer, A extends Arena> {
     Collection<? extends Player> players() {
         return Bukkit.getServer().getOnlinePlayers().stream().filter(player -> getPlayerData(player) != null).collect(Collectors.toList())
     }
+
+    final String arenaInfo = "&7${new SimpleDateFormat("dd/MM/yy").format(new Date(System.currentTimeMillis()))}  &8m001M"
+    final String footer = "&emc.twoot.tk"
 }

@@ -1,5 +1,6 @@
 package dev.foraged.game.util
 
+import java.util.concurrent.TimeUnit
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -51,34 +52,14 @@ class TimeUtil {
         return !found ? -1 : totalTime * 1000
     }
 
-    static String millisToRoundedTime(long millis) {
-        String finalString = ""
-        millis += 1L
+    static String formatTime(long millis) {
+        int seconds = millis / 1000
+        int day = (int) TimeUnit.SECONDS.toDays(seconds)
+        long hours = TimeUnit.SECONDS.toHours(seconds) - (day * 24)
+        long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds) * 60)
+        long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) * 60)
 
-        long seconds = millis / 1000L
-        long minutes = seconds / 60L
-        long hours = minutes / 60L
-        long days = hours / 24L
-        long weeks = days / 7L
-        long months = weeks / 4L
-        long years = months / 12L
-
-        if (years > 0) {
-            finalString = finalString + "${years}y "
-        } else if (months > 0) {
-            finalString = finalString + "${months}mo "
-        } else if (weeks > 0) {
-            finalString = finalString + "${weeks}w "
-        } else if (days > 0) {
-            finalString = finalString + "${days}d "
-        } else if (hours > 0) {
-            finalString = finalString + "${hours}h "
-        } else if (minutes > 0) {
-            finalString = finalString + "${minutes}m "
-        } else {
-            finalString = finalString + "${seconds}s "
-        }
-        return finalString
+        return (day > 0 ? day + "d " : "") + (hours > 0 ? hours + "h " : "") + (minute > 0 ? minute + "m " : "") + (second > 0 ? second + "s " : "")
     }
 
     static String dateToString(Date date) {

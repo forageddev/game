@@ -18,4 +18,9 @@ class CC {
     static String center(String string) {
         return translate(StringUtils.center(string, 64))
     }
+
+    static String placement(int placement) {
+        placement = placement + 1
+        return placement + (placement == 3 ? "rd" : placement == 2 ? "nd" : placement == 1 ? "st" : "th")
+    }
 }
