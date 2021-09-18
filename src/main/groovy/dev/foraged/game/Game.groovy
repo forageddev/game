@@ -1,5 +1,6 @@
 package dev.foraged.game
 
+import com.google.common.reflect.ClassPath
 import dev.foraged.game.arena.Arena
 import dev.foraged.game.board.GameBoardAdapter
 import dev.foraged.game.event.impl.GameStartEvent
@@ -18,6 +19,7 @@ import io.github.thatkawaiisam.assemble.AssembleStyle
 import org.apache.commons.lang.StringUtils
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 
 import java.text.SimpleDateFormat
@@ -113,6 +115,10 @@ abstract class Game<P extends GamePlayer, A extends Arena> {
         })
     }
 
+    Collection<? extends Player> players() {
+        return Bukkit.getServer().getOnlinePlayers().stream().filter(player -> getPlayerData(player) != null).collect(Collectors.toList())
+    }
+
     String[] buildWrapper(String title, String message) {
         Arrays.asList(
                 CC.translate(StringUtils.repeat("&b▬", 80)),
@@ -126,8 +132,8 @@ abstract class Game<P extends GamePlayer, A extends Arena> {
         buildWrapper(name, message)
     }
 
-    Collection<? extends Player> players() {
-        return Bukkit.getServer().getOnlinePlayers().stream().filter(player -> getPlayerData(player) != null).collect(Collectors.toList())
+    void register(Listener... listener) {
+        listener.each {plugin.server.pluginManager.registerEvents(it, plugin)}
     }
 
     final String arenaInfo = "&7${new SimpleDateFormat("dd/MM/yy").format(new Date(System.currentTimeMillis()))}  &8m001M"
