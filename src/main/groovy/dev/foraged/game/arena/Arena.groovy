@@ -8,4 +8,5 @@ interface Arena {
     Location[] getSpawnPoints()
     boolean isInArena(Player player)
 
+    Location getSpawnPoint(Player player)
 }

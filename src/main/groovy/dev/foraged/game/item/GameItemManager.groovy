@@ -34,6 +34,15 @@ abstract class GameItemManager implements Listener {
         return gameItemBundles.containsKey(id) ? gameItemBundles.get(id) : null
     }
 
+    GameItem getGameItem(String id) {
+        if (id == null) return null
+        for (GameItem item : gameItems.values()) {
+            if (item.id == id) return item
+        }
+
+        return null
+    }
+
     GameItem getGameItem(ItemStack stack) {
         if (stack == null) return null
         stack = new ItemBuilder(stack.clone()).amount(1).build()

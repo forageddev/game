@@ -15,6 +15,10 @@ class CC {
         return lore.stream().map(CC::translate).collect(Collectors.toList())
     }
 
+    static String strip(String string) {
+        return ChatColor.stripColor(string)
+    }
+
     static String center(String string) {
         return translate(StringUtils.center(string, 64))
     }

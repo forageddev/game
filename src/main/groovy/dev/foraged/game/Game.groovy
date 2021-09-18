@@ -91,22 +91,26 @@ abstract class Game<P extends GamePlayer, A extends Arena> {
     void stop() {
         new GameStopEvent(this).callEvent()
         List<P> rankings = players.values().stream().sorted(Comparator.naturalOrder()).limit(3).collect(Collectors.toList())
-        buildWrapper(rankings.stream().map(s -> CC.center("&e&l${CC.placement(rankings.indexOf(s))} Place: &7${Bukkit.getOfflinePlayer(s.id).name}")).collect(Collectors.joining("\n", "", ""))).each {broadcast(it)}
+        buildWrapper(rankings.stream().map(s -> CC.center("&e&l${CC.placement(rankings.indexOf(s))} Place: &7${Bukkit.getPlayer(s.id).displayName}")).collect(Collectors.joining("\n", "", ""))).each {broadcast(it)}
     }
 
     void join(Player player) {
         gameItemManager.getItemBundle("lobby").apply(player)
-        player.teleport(arena.spawnPoints[_nextSpawnPoint])
-        if (_nextSpawnPoint == arena.spawnPoints.size()) _nextSpawnPoint = 0
+        if (arena.getSpawnPoint(player) != null) {
+            player.teleport(arena.getSpawnPoint(player))
+        } else {
+            player.teleport(arena.spawnPoints[_nextSpawnPoint])
+            if (_nextSpawnPoint == arena.spawnPoints.size()) _nextSpawnPoint = 0
+        }
 
-        broadcast("&7${player.name} &ehas joined (&b${players.size() + 1}&e/&b${Bukkit.maxPlayers}&e)!")
+        broadcast("&7${player.displayName} &ehas joined (&b${players.size()}&e/&b${Bukkit.maxPlayers}&e)!")
 
         buildWrapper(description.split("\n").toList().stream().map(it -> CC.center("&e&l${it}")).collect(Collectors.joining("\n", "", ""))).each {player.sendMessage(CC.translate(it))}
     }
 
     void leave(Player player) {
         players.remove(player.uniqueId)
-        broadcast("&7${player.name} &ehas quit!")
+        broadcast("&7${player.displayName} &ehas quit!")
     }
 
     void broadcast(String message) {
@@ -130,10 +134,6 @@ abstract class Game<P extends GamePlayer, A extends Arena> {
 
     String[] buildWrapper(String message) {
         buildWrapper(name, message)
-    }
-
-    void register(Listener... listener) {
-        listener.each {plugin.server.pluginManager.registerEvents(it, plugin)}
     }
 
     final String arenaInfo = "&7${new SimpleDateFormat("dd/MM/yy").format(new Date(System.currentTimeMillis()))}  &8m001M"

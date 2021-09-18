@@ -14,4 +14,9 @@ class UnlimitedArena implements Arena {
     boolean isInArena(Player player) {
         return true
     }
+
+    @Override
+    Location getSpawnPoint(Player player) {
+        return null
+    }
 }

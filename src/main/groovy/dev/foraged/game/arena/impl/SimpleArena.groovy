@@ -20,4 +20,9 @@ class SimpleArena implements Arena {
     boolean isInArena(Player player) {
         return cuboid.contains(player)
     }
+
+    @Override
+    Location getSpawnPoint(Player player) {
+        return null
+    }
 }
