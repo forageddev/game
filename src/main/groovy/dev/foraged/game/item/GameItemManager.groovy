@@ -56,6 +56,7 @@ abstract class GameItemManager implements Listener {
     @EventHandler
     void onEvent(InventoryClickEvent e) {
         ItemStack stack = e.currentItem
+        if (stack == null) return
         GameItem gameItem = getGameItem(stack)
         if (gameItem == null) return
 
@@ -65,6 +66,7 @@ abstract class GameItemManager implements Listener {
     @EventHandler
     void onEvent(PlayerInteractEvent e) {
         ItemStack stack = e.item
+        if (stack == null) return
         GameItem gameItem = getGameItem(stack)
         if (gameItem == null) return
 
@@ -74,6 +76,7 @@ abstract class GameItemManager implements Listener {
     @EventHandler
     void onEvent(PlayerDropItemEvent e) {
         ItemStack stack = e.itemDrop.itemStack
+        if (stack == null) return
         GameItem gameItem = getGameItem(stack)
         if (gameItem == null) return
 
@@ -83,6 +86,7 @@ abstract class GameItemManager implements Listener {
     @EventHandler
     void onEvent(PlayerItemConsumeEvent e) {
         ItemStack stack = e.item
+        if (stack == null) return
         GameItem gameItem = getGameItem(stack)
         if (gameItem == null) return
 
@@ -92,6 +96,7 @@ abstract class GameItemManager implements Listener {
     @EventHandler
     void onEvent(PlayerItemHeldEvent e) {
         ItemStack stack = e.player.inventory.getItem(e.getNewSlot())
+        if (stack == null) return
         GameItem gameItem = getGameItem(stack)
         if (gameItem == null) return
 
@@ -101,6 +106,7 @@ abstract class GameItemManager implements Listener {
     @EventHandler
     void onEvent(PlayerPickupItemEvent e) {
         ItemStack stack = e.item.itemStack
+        if (stack == null) return
         GameItem gameItem = getGameItem(stack)
         if (gameItem == null) return
 
@@ -110,6 +116,7 @@ abstract class GameItemManager implements Listener {
     @EventHandler
     void onEvent(PlayerItemBreakEvent e) {
         ItemStack stack = e.brokenItem
+        if (stack == null) return
         GameItem gameItem = getGameItem(stack)
         if (gameItem == null) return
 
@@ -119,6 +126,7 @@ abstract class GameItemManager implements Listener {
     @EventHandler
     void onEvent(PlayerInteractEntityEvent e) {
         ItemStack stack = e.player.itemInHand
+        if (stack == null) return
         GameItem gameItem = getGameItem(stack)
         if (gameItem == null) return
 

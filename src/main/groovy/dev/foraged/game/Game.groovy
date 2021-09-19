@@ -12,6 +12,7 @@ import dev.foraged.game.item.item.spectator.SpectatorPlayAgainItem
 import dev.foraged.game.item.item.ReturnToLobbyItem
 import dev.foraged.game.item.item.spectator.SpectatorSettingsItem
 import dev.foraged.game.item.item.spectator.SpectatorTeleporterItem
+import dev.foraged.game.listener.GameSpectatorListener
 import dev.foraged.game.player.GamePlayer
 import dev.foraged.game.util.CC
 import io.github.thatkawaiisam.assemble.Assemble
@@ -59,6 +60,7 @@ abstract class Game<P extends GamePlayer, A extends Arena> {
                 )
         )
         if (this instanceof SpectatableGame) {
+            Bukkit.server.pluginManager.registerEvents(new GameSpectatorListener(this as SpectatableGame), plugin)
             this.gameItemManager.registerBundle(
                     new GameItemBundle(
                             "spectator",

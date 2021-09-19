@@ -5,6 +5,7 @@ import org.bukkit.entity.Player
 
 interface Arena {
 
+    String getName()
     Location[] getSpawnPoints()
     boolean isInArena(Player player)
 
