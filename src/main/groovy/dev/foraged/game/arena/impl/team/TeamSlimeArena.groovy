@@ -22,12 +22,13 @@ abstract class TeamSlimeArena extends SlimeArena implements TeamArena {
 
     void addSpawnPoints(GamePlayerTeam team, Location... spawns) {
         teamSpawnPoints.put(team, spawns)
+        if (!nextTeamSpawnPoint.containsKey(team)) nextTeamSpawnPoint[team] = 0
     }
 
     @Override
     Location getNextTeamSpawnPoint(GamePlayerTeam team) {
         int next = nextTeamSpawnPoint[team] + 1
-        if (teamSpawnPoints[team].size() == next) next = 0
+        if (teamSpawnPoints[team].size() >= next) next = 0
         nextTeamSpawnPoint.put(team, next)
         return teamSpawnPoints[team][next]
     }

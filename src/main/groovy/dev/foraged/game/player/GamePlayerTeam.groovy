@@ -1,5 +1,7 @@
 package dev.foraged.game.player
 
+import dev.foraged.game.Game
+import dev.foraged.game.SpectatableGame
 import org.bukkit.ChatColor
 import org.bukkit.DyeColor
 import org.bukkit.Material
@@ -44,11 +46,19 @@ enum GamePlayerTeam {
         return values()[ordinal() + 1]
     }
 
+    TeamPlayer[] alive(SpectatableGame game) {
+        return game.alivePlayers().stream().map(p -> (game as Game).getPlayerData(p)).filter(t -> (t as TeamPlayer).team == this).toArray() as TeamPlayer[]
+    }
+
     static GamePlayerTeam nextTeam = RED
 
     static GamePlayerTeam nextTeam() {
         var team = nextTeam
         nextTeam = nextTeam.next
         return team
+    }
+
+    static GamePlayerTeam[] enabled() {
+        return values().toList().stream().filter(t -> t.ordinal() < (System.getProperty("team-count") as int)).toArray() as GamePlayerTeam[]
     }
 }

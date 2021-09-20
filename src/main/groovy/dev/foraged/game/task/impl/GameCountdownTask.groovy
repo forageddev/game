@@ -1,7 +1,6 @@
 package dev.foraged.game.task.impl
 
 import dev.foraged.game.Game
-import dev.foraged.game.task.GameTask
 import org.bukkit.Sound
 import org.bukkit.scheduler.BukkitRunnable
 
@@ -16,7 +15,7 @@ class GameCountdownTask extends BukkitRunnable {
         this.fallbackTime = fallbackTime
         this.minPlayers = minPlayers
 
-        new GameTask(game.plugin, this).delay(20L).repeating()
+        runTaskTimer(game.plugin, 20L, 20L)
     }
 
     @Override
