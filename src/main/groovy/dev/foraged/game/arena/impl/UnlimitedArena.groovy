@@ -10,6 +10,7 @@ class UnlimitedArena implements Arena {
 
     String name = "Unlimited"
     Location[] spawnPoints
+    int nextSpawnPoint
 
     @Override
     boolean isInArena(Player player) {

@@ -20,6 +20,7 @@ class SlimeArena implements Arena {
     @Id String name
     String levelName
     Location[] spawnPoints
+    int nextSpawnPoint
 
     @Transient
     SlimeWorld world

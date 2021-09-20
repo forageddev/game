@@ -1,6 +1,5 @@
 package dev.foraged.game
 
-import com.google.common.reflect.ClassPath
 import dev.foraged.game.arena.Arena
 import dev.foraged.game.board.GameBoardAdapter
 import dev.foraged.game.event.impl.GameStartEvent
@@ -15,19 +14,19 @@ import dev.foraged.game.item.item.spectator.SpectatorTeleporterItem
 import dev.foraged.game.listener.GamePlayerListener
 import dev.foraged.game.listener.GameSpectatorListener
 import dev.foraged.game.player.GamePlayer
+import dev.foraged.game.task.impl.GameCountdownTask
 import dev.foraged.game.util.CC
 import io.github.thatkawaiisam.assemble.Assemble
 import io.github.thatkawaiisam.assemble.AssembleStyle
 import org.apache.commons.lang.StringUtils
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 
 import java.text.SimpleDateFormat
 import java.util.stream.Collectors
 
-abstract class Game<P extends GamePlayer, A extends Arena> {
+abstract class Game<P extends GamePlayer, A extends Arena, S extends Enum> {
 
     static Game instance
     JavaPlugin plugin
@@ -36,7 +35,10 @@ abstract class Game<P extends GamePlayer, A extends Arena> {
     GameItemManager gameItemManager
 
     A arena
+    S gameState
     Map<UUID, P> players = new HashMap<>()
+
+    GameCountdownTask countdownTask
     long started
 
     Game(JavaPlugin plugin, String name, String description) {
@@ -60,9 +62,8 @@ abstract class Game<P extends GamePlayer, A extends Arena> {
                         this.gameItemManager.registerItem(new ReturnToLobbyItem(this))
                 )
         )
-        if (P instanceof KillableGamePlayer) {
-            Bukkit.server.pluginManager.registerEvents(new GamePlayerListener(this), plugin) // this might work not tested   
-        }
+
+        Bukkit.server.pluginManager.registerEvents(new GamePlayerListener(this), plugin) // this might work not tested
         if (this instanceof SpectatableGame) {
             Bukkit.server.pluginManager.registerEvents(new GameSpectatorListener(this as SpectatableGame), plugin)
             this.gameItemManager.registerBundle(
@@ -77,7 +78,13 @@ abstract class Game<P extends GamePlayer, A extends Arena> {
         }
     }
 
-    var _nextSpawnPoint = 0
+    void setGameState(S state) {
+        gameState = state
+    }
+
+    void setGameState(String state) {
+        gameState = Enum.valueOf(gameState.class as Class<S>, state)
+    }
 
     P getPlayerData(UUID id) {
         return players.get(id)
@@ -105,8 +112,8 @@ abstract class Game<P extends GamePlayer, A extends Arena> {
         if (arena.getSpawnPoint(player) != null) {
             player.teleport(arena.getSpawnPoint(player))
         } else {
-            player.teleport(arena.spawnPoints[_nextSpawnPoint])
-            if (_nextSpawnPoint == arena.spawnPoints.size()) _nextSpawnPoint = 0
+            player.teleport(arena.spawnPoints[arena.nextSpawnPoint])
+            if (arena.nextSpawnPoint == arena.spawnPoints.size()) arena.nextSpawnPoint = 0
         }
 
         broadcast("&7${player.displayName} &ehas joined (&b${players.size()}&e/&b${Bukkit.maxPlayers}&e)!")
