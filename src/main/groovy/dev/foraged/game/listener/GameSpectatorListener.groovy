@@ -3,6 +3,7 @@ package dev.foraged.game.listener
 import dev.foraged.game.SpectatableGame
 import org.bukkit.entity.Player
 import org.bukkit.event.Listener
+import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageEvent
 
 class GameSpectatorListener implements Listener {
@@ -13,6 +14,7 @@ class GameSpectatorListener implements Listener {
         this.game = game
     }
 
+    @EventHandler
     void onDamage(EntityDamageEvent e) {
         if (e.entity instanceof Player) {
             Player player = e.entity as Player
