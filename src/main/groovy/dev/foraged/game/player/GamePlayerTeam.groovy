@@ -6,7 +6,6 @@ import org.bukkit.Material
 
 enum GamePlayerTeam {
 
-
     RED(ChatColor.RED, DyeColor.RED),
     BLUE(ChatColor.BLUE, DyeColor.BLUE),
     GREEN(ChatColor.GREEN, DyeColor.LIME),
@@ -41,7 +40,7 @@ enum GamePlayerTeam {
     }
 
     GamePlayerTeam getNext() {
-        if (this == BLUE) return RED
+        if (this.ordinal() == (System.getProperty("team-count") as int) - 1) return RED
         return values()[ordinal() + 1]
     }
 
