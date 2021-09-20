@@ -12,6 +12,7 @@ import dev.foraged.game.item.item.spectator.SpectatorPlayAgainItem
 import dev.foraged.game.item.item.ReturnToLobbyItem
 import dev.foraged.game.item.item.spectator.SpectatorSettingsItem
 import dev.foraged.game.item.item.spectator.SpectatorTeleporterItem
+import dev.foraged.game.listener.GamePlayerListener
 import dev.foraged.game.listener.GameSpectatorListener
 import dev.foraged.game.player.GamePlayer
 import dev.foraged.game.util.CC
@@ -59,6 +60,9 @@ abstract class Game<P extends GamePlayer, A extends Arena> {
                         this.gameItemManager.registerItem(new ReturnToLobbyItem(this))
                 )
         )
+        if (P instanceof KillableGamePlayer) {
+            Bukkit.server.pluginManager.registerEvents(new GamePlayerListener(this), plugin) // this might work not tested   
+        }
         if (this instanceof SpectatableGame) {
             Bukkit.server.pluginManager.registerEvents(new GameSpectatorListener(this as SpectatableGame), plugin)
             this.gameItemManager.registerBundle(
