@@ -8,6 +8,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 import org.bukkit.event.EventHandler
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import dev.foraged.game.Game
 import dev.foraged.game.player.GamePlayer
@@ -43,6 +44,13 @@ class GamePlayerListener implements Listener {
 
 		e.quitMessage = null
 		game.leave(player)
+	}
+
+	@EventHandler
+	void onDamage(EntityDamageEvent e) {
+		if (e.entity instanceof Player && game.gameState.name() == "WAITING" || game.gameState.name() == "STARTING") {
+			e.cancelled = true
+		}
 	}
 
 	@EventHandler
